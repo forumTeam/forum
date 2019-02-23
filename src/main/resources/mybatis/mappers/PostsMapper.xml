@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.forum.repository.mapper.PostsMapper" >
+  <resultMap id="BaseResultMap" type="com.forum.repository.domain.Posts" >
+    <id column="pk_posts_id" property="pkPostsId" jdbcType="BIGINT" />
+    <result column="fk_user_id" property="fkUserId" jdbcType="BIGINT" />
+    <result column="fk_administrator_id" property="fkAdministratorId" jdbcType="BIGINT" />
+    <result column="posts_title" property="postsTitle" jdbcType="VARCHAR" />
+    <result column="is_Del" property="isDel" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.forum.repository.domain.Posts" extends="BaseResultMap" >
+    <result column="posts_content" property="postsContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    pk_posts_id, fk_user_id, fk_administrator_id, posts_title, is_Del, create_time, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    posts_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from posts
+    where pk_posts_id = #{pkPostsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from posts
+    where pk_posts_id = #{pkPostsId,jdbcType=BIGINT}
+  </delete>
+  <select id="selectObjectListByWhere" resultMap="ResultMapWithBLOBs" parameterType="com.forum.repository.domain.Posts" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from posts
+    <where >
+      <if test="fkUserId != null" >
+        and fk_user_id = #{fkUserId,jdbcType=BIGINT}
+      </if>
+      <if test="fkAdministratorId != null" >
+        and fk_administrator_id = #{fkAdministratorId,jdbcType=BIGINT}
+      </if>
+      <if test="postsTitle != null" >
+        and posts_title = #{postsTitle,jdbcType=VARCHAR}
+      </if>
+      <if test="isDel != null" >
+        and is_Del = #{isDel,jdbcType=BIT}
+      </if>
+      <if test="createTime != null" >
+        and to_days(create_time) = to_days(#{createTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="updateTime != null" >
+        and to_days(update_time) = to_days(#{updateTime,jdbcType=TIMESTAMP})
+      </if>
+    </where>
+  </select>
+  <select id="selectByBillId" resultMap="ResultMapWithBLOBs" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from posts
+    <where >
+      <if test="selective != null" >
+        <if test="selective.fkUserId != null" >
+          and fk_user_id = #{selective.fkUserId,jdbcType=BIGINT}
+        </if>
+        <if test="selective.fkAdministratorId != null" >
+          and fk_administrator_id = #{selective.fkAdministratorId,jdbcType=BIGINT}
+        </if>
+        <if test="selective.postsTitle != null" >
+          and posts_title = #{selective.postsTitle,jdbcType=VARCHAR}
+        </if>
+        <if test="selective.isDel != null" >
+          and is_Del = #{selective.isDel,jdbcType=BIT}
+        </if>
+        <if test="selective.createTime != null" >
+          and to_days(create_time) = to_days(#{selective.createTime,jdbcType=TIMESTAMP})
+        </if>
+        <if test="selective.updateTime != null" >
+          and to_days(update_time) = to_days(#{selective.updateTime,jdbcType=TIMESTAMP})
+        </if>
+      </if>
+      <if test="ids != null" >
+        and pk_posts_id in (<foreach collection="ids" separator="," item="item"> #{item} </foreach>)
+      </if>
+    </where>
+  </select>
+  <select id="selectCountByWhere" resultType="java.lang.Integer" parameterType="com.forum.repository.domain.Posts" >
+    select 
+     count(1) 
+    ,
+    <include refid="Blob_Column_List" />
+    from posts
+    <where >
+      <if test="fkUserId != null" >
+        and fk_user_id = #{fkUserId,jdbcType=BIGINT}
+      </if>
+      <if test="fkAdministratorId != null" >
+        and fk_administrator_id = #{fkAdministratorId,jdbcType=BIGINT}
+      </if>
+      <if test="postsTitle != null" >
+        and posts_title = #{postsTitle,jdbcType=VARCHAR}
+      </if>
+      <if test="isDel != null" >
+        and is_Del = #{isDel,jdbcType=BIT}
+      </if>
+      <if test="createTime != null" >
+        and to_days(create_time) = to_days(#{createTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="updateTime != null" >
+        and to_days(update_time) = to_days(#{updateTime,jdbcType=TIMESTAMP})
+      </if>
+    </where>
+  </select>
+  <insert id="insert" parameterType="com.forum.repository.domain.Posts" useGeneratedKeys="true" keyProperty="pkPostsId" >
+    insert into posts (pk_posts_id, fk_user_id, fk_administrator_id, 
+      posts_title, is_Del, create_time, update_time, posts_content
+      )
+    values (#{pkPostsId,jdbcType=BIGINT}, #{fkUserId,jdbcType=BIGINT}, #{fkAdministratorId,jdbcType=BIGINT}, 
+      #{postsTitle,jdbcType=VARCHAR}, #{isDel,jdbcType=BIT}, now(), now(), #{postsContent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" >
+    insert into posts (pk_posts_id, 
+      fk_user_id, fk_administrator_id, posts_title, 
+      is_Del, create_time, update_time, posts_content
+      )
+    values 
+ <foreach collection="records" separator="," item="item">  (#{item.pkPostsId,jdbcType=BIGINT}, 
+      #{item.fkUserId,jdbcType=BIGINT}, #{item.fkAdministratorId,jdbcType=BIGINT}, #{item.postsTitle,jdbcType=VARCHAR}, 
+      #{item.isDel,jdbcType=BIT}, now(), now(), #{item.postsContent,jdbcType=LONGVARCHAR}
+      )  
+ </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.forum.repository.domain.Posts" useGeneratedKeys="true" keyProperty="pkPostsId" >
+    insert into posts
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pkPostsId != null" >
+        pk_posts_id,
+      </if>
+      <if test="fkUserId != null" >
+        fk_user_id,
+      </if>
+      <if test="fkAdministratorId != null" >
+        fk_administrator_id,
+      </if>
+      <if test="postsTitle != null" >
+        posts_title,
+      </if>
+      <if test="isDel != null" >
+        is_Del,
+      </if>
+      <if test="true" >
+        create_time,
+      </if>
+      <if test="true" >
+        update_time,
+      </if>
+      <if test="postsContent != null" >
+        posts_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pkPostsId != null" >
+        #{pkPostsId,jdbcType=BIGINT},
+      </if>
+      <if test="fkUserId != null" >
+        #{fkUserId,jdbcType=BIGINT},
+      </if>
+      <if test="fkAdministratorId != null" >
+        #{fkAdministratorId,jdbcType=BIGINT},
+      </if>
+      <if test="postsTitle != null" >
+        #{postsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=BIT},
+      </if>
+      <if test="true" >
+        now(),
+      </if>
+      <if test="true" >
+        now(),
+      </if>
+      <if test="postsContent != null" >
+        #{postsContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.forum.repository.domain.Posts" >
+    update posts
+    <set >
+      <if test="fkUserId != null" >
+        fk_user_id = #{fkUserId,jdbcType=BIGINT},
+      </if>
+      <if test="fkAdministratorId != null" >
+        fk_administrator_id = #{fkAdministratorId,jdbcType=BIGINT},
+      </if>
+      <if test="postsTitle != null" >
+        posts_title = #{postsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_Del = #{isDel,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="true" >
+        update_time = now(),
+      </if>
+      <if test="postsContent != null" >
+        posts_content = #{postsContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where pk_posts_id = #{pkPostsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.forum.repository.domain.Posts" >
+    update posts
+    set fk_user_id = #{fkUserId,jdbcType=BIGINT},
+      fk_administrator_id = #{fkAdministratorId,jdbcType=BIGINT},
+      posts_title = #{postsTitle,jdbcType=VARCHAR},
+      is_Del = #{isDel,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      posts_content = #{postsContent,jdbcType=LONGVARCHAR}
+    where pk_posts_id = #{pkPostsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.forum.repository.domain.Posts" >
+    update posts
+    set fk_user_id = #{fkUserId,jdbcType=BIGINT},
+      fk_administrator_id = #{fkAdministratorId,jdbcType=BIGINT},
+      posts_title = #{postsTitle,jdbcType=VARCHAR},
+      is_Del = #{isDel,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where pk_posts_id = #{pkPostsId,jdbcType=BIGINT}
+  </update>
+</mapper>
