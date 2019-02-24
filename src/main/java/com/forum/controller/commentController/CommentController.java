@@ -27,7 +27,7 @@ public class CommentController {
         return  commentService.addComment(addCommentVo);
     }
 
-    @ApiOperation(value = "添加帖子评论" , notes = "靳旺")
+    @ApiOperation(value = "查询帖子" , notes = "靳旺")
     @RequestMapping(value = "selectComment" , method = RequestMethod.POST)
     public ResultModel selectComment(@RequestBody SelectCommentVo selectCommentVo)throws Exception{
         return commentService.selectComment(selectCommentVo);
