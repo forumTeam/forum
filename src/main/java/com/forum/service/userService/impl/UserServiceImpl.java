@@ -3,10 +3,15 @@ package com.forum.service.userService.impl;
 import com.forum.common.model.ResultModel;
 import com.forum.common.model.Token;
 import com.forum.common.utils.*;
+import com.forum.pojo.dto.CountDto;
 import com.forum.pojo.vo.userControllerVo.LoginVo;
 import com.forum.pojo.vo.userControllerVo.RegisterVo;
+import com.forum.repository.domain.Dynamic;
 import com.forum.repository.domain.User;
+import com.forum.repository.mapper.DynamicMapper;
 import com.forum.repository.mapper.UserMapper;
+import com.forum.repository.mapper.ext.DynamicMapperExt;
+import com.forum.repository.mapper.ext.PostsMapperExt;
 import com.forum.service.userService.UserService;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.commons.lang3.RandomUtils;
@@ -14,11 +19,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private DynamicMapperExt dynamicMapperExt;
+
+    @Autowired
+    private PostsMapperExt postsMapperExt;
 
     @Override
     @Transactional
@@ -70,5 +85,36 @@ public class UserServiceImpl implements UserService {
         PageList<User> users = userMapper.selectObjectListByWhere(user, ofPageBounds());
         if (CollectionUtil.isEmpty(users)) throw new Exception("查无此人");
         return responseSuccess(users.get(0));
+    }
+
+    @Override
+    @Transactional
+    public ResultModel count() throws Exception {
+        List<CountDto> countDtos = dynamicMapperExt.count();
+
+        List<CountDto> countDto = postsMapperExt.count();
+        LinkedList<CountDto> count=new LinkedList<>();
+
+        LinkedList<CountDto> countPost=new LinkedList<>();
+        HashMap<String,List> map =new HashMap<>();
+
+        for (CountDto countDt:countDtos) {
+            CountDto countDto1=new CountDto();
+            countDto1.setCreateDynamicTime(countDt.getCreateDynamicTime());
+            countDto1.setDynamicCount(countDt.getDynamicCount());
+            count.add(countDto1);
+        }
+
+        for (CountDto countDto1:countDto) {
+            CountDto countDt=new CountDto();
+            countDt.setCreatePostsTime(countDto1.getCreatePostsTime());
+            countDt.setPostsCount(countDto1.getPostsCount());
+            countPost.add(countDt);
+        }
+
+        map.put("dynamic",count);
+        map.put("post",countPost);
+
+        return responseSuccess(map);
     }
 }

@@ -49,4 +49,10 @@ public class UserController {
         return userService.getUserDetail();
     }
 
+    @ApiOperation(value = "获取用帖子与动态数", notes = "靳旺")
+    @RequestMapping(value = "count", method = RequestMethod.POST)
+    public ResultModel count()throws Exception {
+        return userService.count();
+    }
+
 }

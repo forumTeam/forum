@@ -17,4 +17,6 @@ public interface UserService extends BaseService {
     ResultModel getUserInfo() throws Exception;
 
     ResultModel getUserDetail()throws Exception ;
+
+    ResultModel count()throws Exception;
 }
