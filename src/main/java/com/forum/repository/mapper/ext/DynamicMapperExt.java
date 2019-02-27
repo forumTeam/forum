@@ -9,10 +9,17 @@
 package com.forum.repository.mapper.ext;
 
 import com.forum.pojo.dto.CountDto;
+import com.forum.repository.domain.Dynamic;
+import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface DynamicMapperExt {
 
     List<CountDto> count();
+
+
+    PageList<Dynamic> selectObjectListByWhere(@Param("selective") Dynamic record, PageBounds pageBounds);
 }

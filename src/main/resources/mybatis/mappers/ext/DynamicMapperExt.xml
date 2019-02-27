@@ -12,5 +12,25 @@
     </select>
 
 
+    <select id="selectObjectListByWhere" resultMap="com.forum.repository.mapper.DynamicMapper.BaseResultMap">
+        select <include refid="com.forum.repository.mapper.DynamicMapper.Base_Column_List"></include>
+        from dynamic
+        <where>
+            <if test="selective != null">
+                <if test="selective.pkDictionaryId != null">
+                    and pk_dynamic_id = #{selective.pkDictionaryId,jdbcType=BIGINT}
+                </if>
+                <if test="selective.pkDictionaryId != null">
+                    and dynamic_title like concat('%',#{selective.pkDynamicId,jdbcType="VARCHAR"},'%')
+                </if>
+                <if test="selective.isDel != null">
+                    and is_Del = #{selective.isDel ,jdbcType=BIGINT}
+                </if>
+            </if>
+
+        </where>
+    </select>
+
+
 </mapper>
 
