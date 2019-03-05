@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.forum.repository.mapper.UserReviseApplyMapper" >
+  <resultMap id="BaseResultMap" type="com.forum.repository.domain.UserReviseApply" >
+    <result column="REVISION" property="revision" jdbcType="INTEGER" />
+    <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <insert id="insert" parameterType="com.forum.repository.domain.UserReviseApply" useGeneratedKeys="true" keyProperty="" >
+    insert into user_revise_apply (REVISION, CREATED_BY, CREATED_TIME, 
+      UPDATED_TIME)
+    values (#{revision,jdbcType=INTEGER}, #{createdBy,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{updatedTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" >
+    insert into user_revise_apply (REVISION, 
+      CREATED_BY, CREATED_TIME, UPDATED_TIME
+      )
+    values 
+ <foreach collection="records" separator="," item="item">  (#{item.revision,jdbcType=INTEGER}, 
+      #{item.createdBy,jdbcType=VARCHAR}, #{item.createdTime,jdbcType=TIMESTAMP}, #{item.updatedTime,jdbcType=TIMESTAMP}
+      )  
+ </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.forum.repository.domain.UserReviseApply" useGeneratedKeys="true" keyProperty="" >
+    insert into user_revise_apply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="revision != null" >
+        REVISION,
+      </if>
+      <if test="createdBy != null" >
+        CREATED_BY,
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME,
+      </if>
+      <if test="updatedTime != null" >
+        UPDATED_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="revision != null" >
+        #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

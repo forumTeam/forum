@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.forum.repository.mapper.UpgradeLevelMapper" >
+  <resultMap id="BaseResultMap" type="com.forum.repository.domain.UpgradeLevel" >
+    <id column="pk_upgrade_level_id" property="pkUpgradeLevelId" jdbcType="BIGINT" />
+    <result column="fk_user_id" property="fkUserId" jdbcType="BIGINT" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    pk_upgrade_level_id, fk_user_id, level, create_time, update_time, is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from upgrade_level
+    where pk_upgrade_level_id = #{pkUpgradeLevelId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from upgrade_level
+    where pk_upgrade_level_id = #{pkUpgradeLevelId,jdbcType=BIGINT}
+  </delete>
+  <select id="selectObjectListByWhere" resultMap="BaseResultMap" parameterType="com.forum.repository.domain.UpgradeLevel" >
+    select 
+    <include refid="Base_Column_List" />
+    from upgrade_level
+    <where >
+      <if test="fkUserId != null" >
+        and fk_user_id = #{fkUserId,jdbcType=BIGINT}
+      </if>
+      <if test="level != null" >
+        and level = #{level,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and to_days(create_time) = to_days(#{createTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="updateTime != null" >
+        and to_days(update_time) = to_days(#{updateTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="isDel != null" >
+        and is_del = #{isDel,jdbcType=BIT}
+      </if>
+    </where>
+  </select>
+  <select id="selectByBillId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from upgrade_level
+    <where >
+      <if test="selective != null" >
+        <if test="selective.fkUserId != null" >
+          and fk_user_id = #{selective.fkUserId,jdbcType=BIGINT}
+        </if>
+        <if test="selective.level != null" >
+          and level = #{selective.level,jdbcType=INTEGER}
+        </if>
+        <if test="selective.createTime != null" >
+          and to_days(create_time) = to_days(#{selective.createTime,jdbcType=TIMESTAMP})
+        </if>
+        <if test="selective.updateTime != null" >
+          and to_days(update_time) = to_days(#{selective.updateTime,jdbcType=TIMESTAMP})
+        </if>
+        <if test="selective.isDel != null" >
+          and is_del = #{selective.isDel,jdbcType=BIT}
+        </if>
+      </if>
+      <if test="ids != null" >
+        and pk_upgrade_level_id in (<foreach collection="ids" separator="," item="item"> #{item} </foreach>)
+      </if>
+    </where>
+  </select>
+  <select id="selectCountByWhere" resultType="java.lang.Integer" parameterType="com.forum.repository.domain.UpgradeLevel" >
+    select 
+     count(1) 
+    from upgrade_level
+    <where >
+      <if test="fkUserId != null" >
+        and fk_user_id = #{fkUserId,jdbcType=BIGINT}
+      </if>
+      <if test="level != null" >
+        and level = #{level,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and to_days(create_time) = to_days(#{createTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="updateTime != null" >
+        and to_days(update_time) = to_days(#{updateTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="isDel != null" >
+        and is_del = #{isDel,jdbcType=BIT}
+      </if>
+    </where>
+  </select>
+  <insert id="insert" parameterType="com.forum.repository.domain.UpgradeLevel" useGeneratedKeys="true" keyProperty="pkUpgradeLevelId" >
+    insert into upgrade_level (pk_upgrade_level_id, fk_user_id, level, 
+      create_time, update_time, is_del)
+    values (#{pkUpgradeLevelId,jdbcType=BIGINT}, #{fkUserId,jdbcType=BIGINT}, #{level,jdbcType=INTEGER}, 
+      now(), now(), #{isDel,jdbcType=BIT})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" >
+    insert into upgrade_level (pk_upgrade_level_id, 
+      fk_user_id, level, create_time, update_time, 
+      is_del)
+    values 
+ <foreach collection="records" separator="," item="item">  (#{item.pkUpgradeLevelId,jdbcType=BIGINT}, 
+      #{item.fkUserId,jdbcType=BIGINT}, #{item.level,jdbcType=INTEGER}, now(), now(), 
+      #{item.isDel,jdbcType=BIT})  
+ </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.forum.repository.domain.UpgradeLevel" useGeneratedKeys="true" keyProperty="pkUpgradeLevelId" >
+    insert into upgrade_level
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pkUpgradeLevelId != null" >
+        pk_upgrade_level_id,
+      </if>
+      <if test="fkUserId != null" >
+        fk_user_id,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="true" >
+        create_time,
+      </if>
+      <if test="true" >
+        update_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pkUpgradeLevelId != null" >
+        #{pkUpgradeLevelId,jdbcType=BIGINT},
+      </if>
+      <if test="fkUserId != null" >
+        #{fkUserId,jdbcType=BIGINT},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="true" >
+        now(),
+      </if>
+      <if test="true" >
+        now(),
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.forum.repository.domain.UpgradeLevel" >
+    update upgrade_level
+    <set >
+      <if test="fkUserId != null" >
+        fk_user_id = #{fkUserId,jdbcType=BIGINT},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="true" >
+        update_time = now(),
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=BIT},
+      </if>
+    </set>
+    where pk_upgrade_level_id = #{pkUpgradeLevelId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.forum.repository.domain.UpgradeLevel" >
+    update upgrade_level
+    set fk_user_id = #{fkUserId,jdbcType=BIGINT},
+      level = #{level,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=BIT}
+    where pk_upgrade_level_id = #{pkUpgradeLevelId,jdbcType=BIGINT}
+  </update>
+</mapper>

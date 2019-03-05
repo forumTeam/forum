@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.forum.repository.mapper.DynamicMapper" >
+  <resultMap id="BaseResultMap" type="com.forum.repository.domain.Dynamic" >
+    <id column="pk_dynamic_id" property="pkDynamicId" jdbcType="BIGINT" />
+    <result column="fk_user_id" property="fkUserId" jdbcType="BIGINT" />
+    <result column="dynamic_title" property="dynamicTitle" jdbcType="VARCHAR" />
+    <result column="fk_administrator_id" property="fkAdministratorId" jdbcType="BIGINT" />
+    <result column="is_Del" property="isDel" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.forum.repository.domain.Dynamic" extends="BaseResultMap" >
+    <result column="dynamic_content" property="dynamicContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    pk_dynamic_id, fk_user_id, dynamic_title, fk_administrator_id, is_Del, create_time, 
+    update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    dynamic_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from dynamic
+    where pk_dynamic_id = #{pkDynamicId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from dynamic
+    where pk_dynamic_id = #{pkDynamicId,jdbcType=BIGINT}
+  </delete>
+  <select id="selectObjectListByWhere" resultMap="ResultMapWithBLOBs" parameterType="com.forum.repository.domain.Dynamic" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from dynamic
+    <where >
+      <if test="fkUserId != null" >
+        and fk_user_id = #{fkUserId,jdbcType=BIGINT}
+      </if>
+      <if test="dynamicTitle != null" >
+        and dynamic_title = #{dynamicTitle,jdbcType=VARCHAR}
+      </if>
+      <if test="fkAdministratorId != null" >
+        and fk_administrator_id = #{fkAdministratorId,jdbcType=BIGINT}
+      </if>
+      <if test="isDel != null" >
+        and is_Del = #{isDel,jdbcType=BIT}
+      </if>
+      <if test="createTime != null" >
+        and to_days(create_time) = to_days(#{createTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="updateTime != null" >
+        and to_days(update_time) = to_days(#{updateTime,jdbcType=TIMESTAMP})
+      </if>
+    </where>
+  </select>
+  <select id="selectByBillId" resultMap="ResultMapWithBLOBs" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from dynamic
+    <where >
+      <if test="selective != null" >
+        <if test="selective.fkUserId != null" >
+          and fk_user_id = #{selective.fkUserId,jdbcType=BIGINT}
+        </if>
+        <if test="selective.dynamicTitle != null" >
+          and dynamic_title = #{selective.dynamicTitle,jdbcType=VARCHAR}
+        </if>
+        <if test="selective.fkAdministratorId != null" >
+          and fk_administrator_id = #{selective.fkAdministratorId,jdbcType=BIGINT}
+        </if>
+        <if test="selective.isDel != null" >
+          and is_Del = #{selective.isDel,jdbcType=BIT}
+        </if>
+        <if test="selective.createTime != null" >
+          and to_days(create_time) = to_days(#{selective.createTime,jdbcType=TIMESTAMP})
+        </if>
+        <if test="selective.updateTime != null" >
+          and to_days(update_time) = to_days(#{selective.updateTime,jdbcType=TIMESTAMP})
+        </if>
+      </if>
+      <if test="ids != null" >
+        and pk_dynamic_id in (<foreach collection="ids" separator="," item="item"> #{item} </foreach>)
+      </if>
+    </where>
+  </select>
+  <select id="selectCountByWhere" resultType="java.lang.Integer" parameterType="com.forum.repository.domain.Dynamic" >
+    select 
+     count(1) 
+    ,
+    <include refid="Blob_Column_List" />
+    from dynamic
+    <where >
+      <if test="fkUserId != null" >
+        and fk_user_id = #{fkUserId,jdbcType=BIGINT}
+      </if>
+      <if test="dynamicTitle != null" >
+        and dynamic_title = #{dynamicTitle,jdbcType=VARCHAR}
+      </if>
+      <if test="fkAdministratorId != null" >
+        and fk_administrator_id = #{fkAdministratorId,jdbcType=BIGINT}
+      </if>
+      <if test="isDel != null" >
+        and is_Del = #{isDel,jdbcType=BIT}
+      </if>
+      <if test="createTime != null" >
+        and to_days(create_time) = to_days(#{createTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="updateTime != null" >
+        and to_days(update_time) = to_days(#{updateTime,jdbcType=TIMESTAMP})
+      </if>
+    </where>
+  </select>
+  <insert id="insert" parameterType="com.forum.repository.domain.Dynamic" useGeneratedKeys="true" keyProperty="pkDynamicId" >
+    insert into dynamic (pk_dynamic_id, fk_user_id, dynamic_title, 
+      fk_administrator_id, is_Del, create_time, update_time, dynamic_content
+      )
+    values (#{pkDynamicId,jdbcType=BIGINT}, #{fkUserId,jdbcType=BIGINT}, #{dynamicTitle,jdbcType=VARCHAR}, 
+      #{fkAdministratorId,jdbcType=BIGINT}, #{isDel,jdbcType=BIT}, now(), now(), #{dynamicContent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" >
+    insert into dynamic (pk_dynamic_id, 
+      fk_user_id, dynamic_title, fk_administrator_id, 
+      is_Del, create_time, update_time, dynamic_content
+      )
+    values 
+ <foreach collection="records" separator="," item="item">  (#{item.pkDynamicId,jdbcType=BIGINT}, 
+      #{item.fkUserId,jdbcType=BIGINT}, #{item.dynamicTitle,jdbcType=VARCHAR}, #{item.fkAdministratorId,jdbcType=BIGINT}, 
+      #{item.isDel,jdbcType=BIT}, now(), now(), #{item.dynamicContent,jdbcType=LONGVARCHAR}
+      )  
+ </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.forum.repository.domain.Dynamic" useGeneratedKeys="true" keyProperty="pkDynamicId" >
+    insert into dynamic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pkDynamicId != null" >
+        pk_dynamic_id,
+      </if>
+      <if test="fkUserId != null" >
+        fk_user_id,
+      </if>
+      <if test="dynamicTitle != null" >
+        dynamic_title,
+      </if>
+      <if test="fkAdministratorId != null" >
+        fk_administrator_id,
+      </if>
+      <if test="isDel != null" >
+        is_Del,
+      </if>
+      <if test="true" >
+        create_time,
+      </if>
+      <if test="true" >
+        update_time,
+      </if>
+      <if test="dynamicContent != null" >
+        dynamic_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pkDynamicId != null" >
+        #{pkDynamicId,jdbcType=BIGINT},
+      </if>
+      <if test="fkUserId != null" >
+        #{fkUserId,jdbcType=BIGINT},
+      </if>
+      <if test="dynamicTitle != null" >
+        #{dynamicTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="fkAdministratorId != null" >
+        #{fkAdministratorId,jdbcType=BIGINT},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=BIT},
+      </if>
+      <if test="true" >
+        now(),
+      </if>
+      <if test="true" >
+        now(),
+      </if>
+      <if test="dynamicContent != null" >
+        #{dynamicContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.forum.repository.domain.Dynamic" >
+    update dynamic
+    <set >
+      <if test="fkUserId != null" >
+        fk_user_id = #{fkUserId,jdbcType=BIGINT},
+      </if>
+      <if test="dynamicTitle != null" >
+        dynamic_title = #{dynamicTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="fkAdministratorId != null" >
+        fk_administrator_id = #{fkAdministratorId,jdbcType=BIGINT},
+      </if>
+      <if test="isDel != null" >
+        is_Del = #{isDel,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="true" >
+        update_time = now(),
+      </if>
+      <if test="dynamicContent != null" >
+        dynamic_content = #{dynamicContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where pk_dynamic_id = #{pkDynamicId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.forum.repository.domain.Dynamic" >
+    update dynamic
+    set fk_user_id = #{fkUserId,jdbcType=BIGINT},
+      dynamic_title = #{dynamicTitle,jdbcType=VARCHAR},
+      fk_administrator_id = #{fkAdministratorId,jdbcType=BIGINT},
+      is_Del = #{isDel,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      dynamic_content = #{dynamicContent,jdbcType=LONGVARCHAR}
+    where pk_dynamic_id = #{pkDynamicId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.forum.repository.domain.Dynamic" >
+    update dynamic
+    set fk_user_id = #{fkUserId,jdbcType=BIGINT},
+      dynamic_title = #{dynamicTitle,jdbcType=VARCHAR},
+      fk_administrator_id = #{fkAdministratorId,jdbcType=BIGINT},
+      is_Del = #{isDel,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where pk_dynamic_id = #{pkDynamicId,jdbcType=BIGINT}
+  </update>
+</mapper>

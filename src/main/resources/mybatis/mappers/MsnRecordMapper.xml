@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.forum.repository.mapper.MsnRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.forum.repository.domain.MsnRecord" >
+    <id column="pk_msn_record_id" property="pkMsnRecordId" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="sender" property="sender" jdbcType="BIGINT" />
+    <result column="sender_type" property="senderType" jdbcType="BIGINT" />
+    <result column="receiver" property="receiver" jdbcType="BIGINT" />
+    <result column="receiver_type" property="receiverType" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    pk_msn_record_id, title, content, note, sender, sender_type, receiver, receiver_type, 
+    create_time, update_time, is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from msn_record
+    where pk_msn_record_id = #{pkMsnRecordId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from msn_record
+    where pk_msn_record_id = #{pkMsnRecordId,jdbcType=BIGINT}
+  </delete>
+  <select id="selectObjectListByWhere" resultMap="BaseResultMap" parameterType="com.forum.repository.domain.MsnRecord" >
+    select 
+    <include refid="Base_Column_List" />
+    from msn_record
+    <where >
+      <if test="title != null" >
+        and title = #{title,jdbcType=VARCHAR}
+      </if>
+      <if test="content != null" >
+        and content = #{content,jdbcType=VARCHAR}
+      </if>
+      <if test="note != null" >
+        and note = #{note,jdbcType=VARCHAR}
+      </if>
+      <if test="sender != null" >
+        and sender = #{sender,jdbcType=BIGINT}
+      </if>
+      <if test="senderType != null" >
+        and sender_type = #{senderType,jdbcType=BIGINT}
+      </if>
+      <if test="receiver != null" >
+        and receiver = #{receiver,jdbcType=BIGINT}
+      </if>
+      <if test="receiverType != null" >
+        and receiver_type = #{receiverType,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and to_days(create_time) = to_days(#{createTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="updateTime != null" >
+        and to_days(update_time) = to_days(#{updateTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="isDel != null" >
+        and is_del = #{isDel,jdbcType=BIT}
+      </if>
+    </where>
+  </select>
+  <select id="selectByBillId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from msn_record
+    <where >
+      <if test="selective != null" >
+        <if test="selective.title != null" >
+          and title = #{selective.title,jdbcType=VARCHAR}
+        </if>
+        <if test="selective.content != null" >
+          and content = #{selective.content,jdbcType=VARCHAR}
+        </if>
+        <if test="selective.note != null" >
+          and note = #{selective.note,jdbcType=VARCHAR}
+        </if>
+        <if test="selective.sender != null" >
+          and sender = #{selective.sender,jdbcType=BIGINT}
+        </if>
+        <if test="selective.senderType != null" >
+          and sender_type = #{selective.senderType,jdbcType=BIGINT}
+        </if>
+        <if test="selective.receiver != null" >
+          and receiver = #{selective.receiver,jdbcType=BIGINT}
+        </if>
+        <if test="selective.receiverType != null" >
+          and receiver_type = #{selective.receiverType,jdbcType=INTEGER}
+        </if>
+        <if test="selective.createTime != null" >
+          and to_days(create_time) = to_days(#{selective.createTime,jdbcType=TIMESTAMP})
+        </if>
+        <if test="selective.updateTime != null" >
+          and to_days(update_time) = to_days(#{selective.updateTime,jdbcType=TIMESTAMP})
+        </if>
+        <if test="selective.isDel != null" >
+          and is_del = #{selective.isDel,jdbcType=BIT}
+        </if>
+      </if>
+      <if test="ids != null" >
+        and pk_msn_record_id in (<foreach collection="ids" separator="," item="item"> #{item} </foreach>)
+      </if>
+    </where>
+  </select>
+  <select id="selectCountByWhere" resultType="java.lang.Integer" parameterType="com.forum.repository.domain.MsnRecord" >
+    select 
+     count(1) 
+    from msn_record
+    <where >
+      <if test="title != null" >
+        and title = #{title,jdbcType=VARCHAR}
+      </if>
+      <if test="content != null" >
+        and content = #{content,jdbcType=VARCHAR}
+      </if>
+      <if test="note != null" >
+        and note = #{note,jdbcType=VARCHAR}
+      </if>
+      <if test="sender != null" >
+        and sender = #{sender,jdbcType=BIGINT}
+      </if>
+      <if test="senderType != null" >
+        and sender_type = #{senderType,jdbcType=BIGINT}
+      </if>
+      <if test="receiver != null" >
+        and receiver = #{receiver,jdbcType=BIGINT}
+      </if>
+      <if test="receiverType != null" >
+        and receiver_type = #{receiverType,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and to_days(create_time) = to_days(#{createTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="updateTime != null" >
+        and to_days(update_time) = to_days(#{updateTime,jdbcType=TIMESTAMP})
+      </if>
+      <if test="isDel != null" >
+        and is_del = #{isDel,jdbcType=BIT}
+      </if>
+    </where>
+  </select>
+  <insert id="insert" parameterType="com.forum.repository.domain.MsnRecord" useGeneratedKeys="true" keyProperty="pkMsnRecordId" >
+    insert into msn_record (pk_msn_record_id, title, content, 
+      note, sender, sender_type, 
+      receiver, receiver_type, create_time, update_time, is_del
+      )
+    values (#{pkMsnRecordId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{note,jdbcType=VARCHAR}, #{sender,jdbcType=BIGINT}, #{senderType,jdbcType=BIGINT}, 
+      #{receiver,jdbcType=BIGINT}, #{receiverType,jdbcType=INTEGER}, now(), now(), #{isDel,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" >
+    insert into msn_record (pk_msn_record_id, 
+      title, content, note, 
+      sender, sender_type, receiver, 
+      receiver_type, create_time, update_time, is_del
+      )
+    values 
+ <foreach collection="records" separator="," item="item">  (#{item.pkMsnRecordId,jdbcType=BIGINT}, 
+      #{item.title,jdbcType=VARCHAR}, #{item.content,jdbcType=VARCHAR}, #{item.note,jdbcType=VARCHAR}, 
+      #{item.sender,jdbcType=BIGINT}, #{item.senderType,jdbcType=BIGINT}, #{item.receiver,jdbcType=BIGINT}, 
+      #{item.receiverType,jdbcType=INTEGER}, now(), now(), #{item.isDel,jdbcType=BIT}
+      )  
+ </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.forum.repository.domain.MsnRecord" useGeneratedKeys="true" keyProperty="pkMsnRecordId" >
+    insert into msn_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pkMsnRecordId != null" >
+        pk_msn_record_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="sender != null" >
+        sender,
+      </if>
+      <if test="senderType != null" >
+        sender_type,
+      </if>
+      <if test="receiver != null" >
+        receiver,
+      </if>
+      <if test="receiverType != null" >
+        receiver_type,
+      </if>
+      <if test="true" >
+        create_time,
+      </if>
+      <if test="true" >
+        update_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pkMsnRecordId != null" >
+        #{pkMsnRecordId,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="sender != null" >
+        #{sender,jdbcType=BIGINT},
+      </if>
+      <if test="senderType != null" >
+        #{senderType,jdbcType=BIGINT},
+      </if>
+      <if test="receiver != null" >
+        #{receiver,jdbcType=BIGINT},
+      </if>
+      <if test="receiverType != null" >
+        #{receiverType,jdbcType=INTEGER},
+      </if>
+      <if test="true" >
+        now(),
+      </if>
+      <if test="true" >
+        now(),
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.forum.repository.domain.MsnRecord" >
+    update msn_record
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="sender != null" >
+        sender = #{sender,jdbcType=BIGINT},
+      </if>
+      <if test="senderType != null" >
+        sender_type = #{senderType,jdbcType=BIGINT},
+      </if>
+      <if test="receiver != null" >
+        receiver = #{receiver,jdbcType=BIGINT},
+      </if>
+      <if test="receiverType != null" >
+        receiver_type = #{receiverType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="true" >
+        update_time = now(),
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=BIT},
+      </if>
+    </set>
+    where pk_msn_record_id = #{pkMsnRecordId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.forum.repository.domain.MsnRecord" >
+    update msn_record
+    set title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      sender = #{sender,jdbcType=BIGINT},
+      sender_type = #{senderType,jdbcType=BIGINT},
+      receiver = #{receiver,jdbcType=BIGINT},
+      receiver_type = #{receiverType,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=BIT}
+    where pk_msn_record_id = #{pkMsnRecordId,jdbcType=BIGINT}
+  </update>
+</mapper>
