@@ -15,6 +15,9 @@ import com.forum.repository.mapper.ext.PostsMapperExt;
 import com.forum.service.userService.UserService;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.Md5Hash;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,13 +61,18 @@ public class UserServiceImpl implements UserService {
         user.setIsDel(false);
         if (userMapper.selectCountByWhere(user) != 0) throw new Exception("账号已被注册，请换账号");
         user.setName(registerVo.getName());
-        user.setSalt(String.valueOf(RandomUtils.nextInt()));
-        user.setPassword(EncryptUtil.md5(registerVo.getPassword(), user.getSalt()));
+        user.setSalt("");
+        user.setPassword("");
         user.setNickName(registerVo.getNickName());
         user.setSex(registerVo.getSex());
         user.setQq(registerVo.getQq());
         user.setPhone(registerVo.getPhone());
         if (userMapper.insertSelective(user) <= 0) throw new Exception("注册失败");
+        ByteSource byteSource = ByteSource.Util.bytes(user.getAccount());
+        String ciphertext = new Md5Hash(registerVo.getPassword(),  byteSource, 3).toString(); //生成的密文
+        user.setPassword(ciphertext);
+        user.setSalt(byteSource.toString());
+        if (userMapper.updateByPrimaryKeySelective(user) <= 0) throw new Exception("注册失败");
         return responseSuccess();
     }
 
@@ -92,27 +100,27 @@ public class UserServiceImpl implements UserService {
         List<CountDto> countDtos = dynamicMapperExt.count(user);
 
         List<CountDto> countDto = postsMapperExt.count(user);
-        LinkedList<CountDto> count=new LinkedList<>();
+        LinkedList<CountDto> count = new LinkedList<>();
 
-        LinkedList<CountDto> countPost=new LinkedList<>();
-        HashMap<String,List> map =new HashMap<>();
+        LinkedList<CountDto> countPost = new LinkedList<>();
+        HashMap<String, List> map = new HashMap<>();
 
-        for (CountDto countDt:countDtos) {
-            CountDto countDto1=new CountDto();
+        for (CountDto countDt : countDtos) {
+            CountDto countDto1 = new CountDto();
             countDto1.setCreateDynamicTime(countDt.getCreateDynamicTime());
             countDto1.setDynamicCount(countDt.getDynamicCount());
             count.add(countDto1);
         }
 
-        for (CountDto countDto1:countDto) {
-            CountDto countDt=new CountDto();
+        for (CountDto countDto1 : countDto) {
+            CountDto countDt = new CountDto();
             countDt.setCreatePostsTime(countDto1.getCreatePostsTime());
             countDt.setPostsCount(countDto1.getPostsCount());
             countPost.add(countDt);
         }
 
-        map.put("dynamic",count);
-        map.put("post",countPost);
+        map.put("dynamic", count);
+        map.put("post", countPost);
 
         return responseSuccess(map);
     }

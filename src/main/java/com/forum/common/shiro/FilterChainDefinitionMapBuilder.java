@@ -6,7 +6,10 @@ public class FilterChainDefinitionMapBuilder {
 
     public LinkedHashMap<String, String> builder() {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put("/shiro/logout", "logout");
+        map.put("/user/register", "anon");
+        map.put("/user/login", "anon");
+        map.put("/user/logout", "logout");
+        map.put("/login.jsp", "anon");
         map.put("/**", "authc");
         return map;
     }
