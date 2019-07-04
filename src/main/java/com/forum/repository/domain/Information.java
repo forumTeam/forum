@@ -1,9 +1,9 @@
 /*
-* 文 件 名:  Message.java
+* 文 件 名:  Information.java
 * 版     权:  百立特信息技术有限公司
-* 描     述:  数据库实体类:Message
+* 描     述:  数据库实体类:Information
 * 修 改 人:  teng
-* 修改时间:  2019年01月29日
+* 修改时间:  2019年07月04日
 * 修改内容:  <修改内容>
 */
 package com.forum.repository.domain;
@@ -11,7 +11,7 @@ package com.forum.repository.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Message implements Serializable {
+public class Information implements Serializable {
     /**
      * 主键
      */

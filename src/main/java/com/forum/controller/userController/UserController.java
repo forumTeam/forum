@@ -1,9 +1,14 @@
 package com.forum.controller.userController;
 
 
+import com.alibaba.fastjson.JSON;
+import com.forum.common.listener.rabbitmq.util.QueueEnum;
+import com.forum.common.listener.rabbitmq.util.TeskExchangeUtil;
 import com.forum.common.model.ResultModel;
+import com.forum.common.shiro.ShrioRealm;
 import com.forum.pojo.vo.userControllerVo.LoginVo;
 import com.forum.pojo.vo.userControllerVo.RegisterVo;
+import com.forum.repository.domain.User;
 import com.forum.service.userService.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,10 +28,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ShrioRealm shrioRealm;
+
     @ApiOperation(value = "登陆", notes = "靳旺")
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResultModel login(@RequestBody @Valid LoginVo loginVo) throws Exception {
-        return userService.login(loginVo);
+        return shrioRealm.login(loginVo.getAccount(), loginVo.getPassword());
     }
 
 
@@ -43,16 +51,17 @@ public class UserController {
         return userService.getUserInfo();
     }
 
-   @ApiOperation(value = "获取用户详细信息", notes = "靳旺")
+    @ApiOperation(value = "获取用户详细信息", notes = "靳旺")
     @RequestMapping(value = "getUserDetail", method = RequestMethod.POST)
-    public ResultModel getUserDetail()throws Exception {
+    public ResultModel getUserDetail() throws Exception {
         return userService.getUserDetail();
     }
 
     @ApiOperation(value = "获取用帖子与动态数", notes = "靳旺")
     @RequestMapping(value = "count", method = RequestMethod.POST)
-    public ResultModel count()throws Exception {
+    public ResultModel count() throws Exception {
         return userService.count();
     }
+
 
 }
