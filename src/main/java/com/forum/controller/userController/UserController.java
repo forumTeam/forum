@@ -31,6 +31,9 @@ public class UserController {
     @Autowired
     private ShrioRealm shrioRealm;
 
+    @Autowired
+    private TeskExchangeUtil teskExchangeUtil;
+
     @ApiOperation(value = "登陆", notes = "靳旺")
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResultModel login(@RequestBody @Valid LoginVo loginVo) throws Exception {
@@ -63,5 +66,22 @@ public class UserController {
         return userService.count();
     }
 
+    @ApiOperation(value = "测试rabbitmq", notes = "靳旺")
+    @RequestMapping(value = "counts", method = RequestMethod.GET)
+    public ResultModel counts() throws Exception {
+
+        for (int i = 0; i < 100; i++) {
+            try {
+                Thread.sleep(1000);
+                User user = new User();
+                user.setAccount("Account:" + i);
+                user.setName("name:" + i);
+                teskExchangeUtil.send(QueueEnum.testRabbitMessage.getQueueName(), JSON.toJSONBytes(user));
+            } catch (Exception e) {
+
+            }
+        }
+        return ResultModel.getSuccessResultModel();
+    }
 
 }

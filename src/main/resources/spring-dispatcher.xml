@@ -35,6 +35,7 @@
             <mvc:exclude-mapping path="/index.html"/>
             <mvc:exclude-mapping path="/user/login"/>
             <mvc:exclude-mapping path="/user/register"/>
+            <mvc:exclude-mapping path="/user/counts"/>
             <bean class="com.forum.common.filter.TokenInterceptor"></bean>
         </mvc:interceptor>
     </mvc:interceptors>
