@@ -61,18 +61,13 @@ public class UserServiceImpl implements UserService {
         user.setIsDel(false);
         if (userMapper.selectCountByWhere(user) != 0) throw new Exception("账号已被注册，请换账号");
         user.setName(registerVo.getName());
-        user.setSalt("");
-        user.setPassword("");
+        user.setSalt(new SecureRandomNumberGenerator().nextBytes().toHex());
+        user.setPassword(new Md5Hash(registerVo.getPassword(),  user.getSalt(), 3).toString());
         user.setNickName(registerVo.getNickName());
         user.setSex(registerVo.getSex());
         user.setQq(registerVo.getQq());
         user.setPhone(registerVo.getPhone());
         if (userMapper.insertSelective(user) <= 0) throw new Exception("注册失败");
-        ByteSource byteSource = ByteSource.Util.bytes(user.getAccount());
-        String ciphertext = new Md5Hash(registerVo.getPassword(),  byteSource, 3).toString(); //生成的密文
-        user.setPassword(ciphertext);
-        user.setSalt(byteSource.toString());
-        if (userMapper.updateByPrimaryKeySelective(user) <= 0) throw new Exception("注册失败");
         return responseSuccess();
     }
 

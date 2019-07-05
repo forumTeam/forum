@@ -6,7 +6,7 @@
 
     <!-- 1、配置 securityManager -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="cacheManager" ref="cacheManager"/>
+     <!--   <property name="cacheManager" ref="cacheManager"/>-->
         <property name="authenticator" ref="authenticator"/>
         <property name="realms">
             <list>
@@ -18,9 +18,9 @@
     </bean>
 
     <!-- 缓存管理器 使用Ehcache实现 -->
-    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+ <!--   <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
         <property name="cacheManagerConfigFile" value="classpath:spring-ehcache.xml"/>
-    </bean>
+    </bean>-->
 
     <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
         <property name="authenticationStrategy">
@@ -34,6 +34,7 @@
             <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
                 <property name="hashAlgorithmName" value="MD5"/>
                 <property name="hashIterations" value="3"/>
+                <property name="storedCredentialsHexEncoded" value="true"/>
             </bean>
         </property>
     </bean>

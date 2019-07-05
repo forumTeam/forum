@@ -61,10 +61,14 @@ public class ShrioRealm extends AuthorizingRealm {
         PageList<User> users = userMapper.selectObjectListByWhere(user, new PageBounds());
         SimpleAuthenticationInfo info = null;
         if (!ObjectUtil.isNull(users)) {
-            ByteSource byteSource = ByteSource.Util.bytes(user.getAccount());
+            ByteSource byteSource = ByteSource.Util.bytes(users.get(0).getSalt());
+            logger.warn("ByteSource====================>"+byteSource.toHex());
             String realm = getName();
-            info = new SimpleAuthenticationInfo(user.getAccount(), user.getPassword(), byteSource, realm);
+            info = new SimpleAuthenticationInfo(user.getAccount(), users.get(0).getPassword(), byteSource, realm);
         }
         return info;
     }
+
+
+
 }
