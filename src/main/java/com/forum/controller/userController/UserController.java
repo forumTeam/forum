@@ -12,6 +12,7 @@ import com.forum.repository.domain.User;
 import com.forum.service.userService.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 
 @Api(tags = "用户")
 @RestController
@@ -33,6 +35,7 @@ public class UserController {
 
     @Autowired
     private TeskExchangeUtil teskExchangeUtil;
+
 
     @ApiOperation(value = "登陆", notes = "靳旺")
     @RequestMapping(value = "login", method = RequestMethod.POST)
@@ -82,6 +85,17 @@ public class UserController {
             }
         }
         return ResultModel.getSuccessResultModel();
+    }
+
+    @RequiresRoles("admin")
+    @ApiOperation(value = "获取用帖子与动态数", notes = "靳旺")
+    @RequestMapping(value = "getRoles", method = RequestMethod.POST)
+    public ResultModel getRoles() throws Exception {
+        ArrayList arrayList = new ArrayList();
+        arrayList.add("admin");
+        arrayList.add("user");
+        arrayList.add("anon");
+        return ResultModel.getSuccessResultModel(arrayList);
     }
 
 }

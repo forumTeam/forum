@@ -1,6 +1,8 @@
 package com.forum.common.shiro;
 
 import com.forum.common.model.ResultModel;
+import com.forum.common.model.Token;
+import com.forum.common.utils.JWTUtil;
 import com.forum.common.utils.ObjectUtil;
 import com.forum.repository.domain.User;
 import com.forum.repository.mapper.UserMapper;
@@ -10,6 +12,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
@@ -42,12 +45,19 @@ public class ShrioRealm extends AuthorizingRealm {
                 throw new Exception("认证失败" + e.getMessage());
             }
         }
-        return ResultModel.getSuccessResultModel();
+        Session session = SecurityUtils.getSubject().getSession();
+        Token token = new Token();
+        token.setUserId((Long) session.getAttribute("id"));
+        session.stop();
+        return ResultModel.getSuccessResultModel((Object) JWTUtil.sign(token));
     }
 
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+       System.out.println("doGetAuthorizationInfo=====================>");
+        String userName=(String) SecurityUtils.getSubject().getPrincipal();
+        logger.warn("userName=====================>"+userName);
         return null;
     }
 
@@ -62,13 +72,14 @@ public class ShrioRealm extends AuthorizingRealm {
         SimpleAuthenticationInfo info = null;
         if (!ObjectUtil.isNull(users)) {
             ByteSource byteSource = ByteSource.Util.bytes(users.get(0).getSalt());
-            logger.warn("ByteSource====================>"+byteSource.toHex());
+            logger.warn("ByteSource====================>" + byteSource.toHex());
             String realm = getName();
             info = new SimpleAuthenticationInfo(user.getAccount(), users.get(0).getPassword(), byteSource, realm);
+            Session session = SecurityUtils.getSubject().getSession();
+            session.setAttribute("id", users.get(0).getPkUserId());
         }
         return info;
     }
-
 
 
 }
