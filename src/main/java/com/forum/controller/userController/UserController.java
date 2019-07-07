@@ -87,7 +87,6 @@ public class UserController {
         return ResultModel.getSuccessResultModel();
     }
 
-    @RequiresRoles("admin")
     @ApiOperation(value = "获取用帖子与动态数", notes = "靳旺")
     @RequestMapping(value = "getRoles", method = RequestMethod.POST)
     public ResultModel getRoles() throws Exception {
