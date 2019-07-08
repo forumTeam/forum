@@ -13,7 +13,7 @@ public class FilterChainDefinitionMapBuilder {
         map.put("/user/counts", "anon");
         map.put("/user/logout", "logout");
         map.put("/login.jsp", "anon");
-        map.put("/**", "authc");
+      //  map.put("/**", "authc");
         return map;
     }
 
