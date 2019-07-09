@@ -33,7 +33,7 @@ public class TransactionAspect {
         try {
             methodExecutedResult = method.proceed(method.getArgs());
         } catch (Throwable throwable) {
-            logger.warn(throwable.getMessage());
+            throwable.printStackTrace();
             return ResultModel.getErrorResultModel(throwable.getMessage());
         }
         return methodExecutedResult;

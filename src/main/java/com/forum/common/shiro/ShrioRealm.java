@@ -30,13 +30,13 @@ public class ShrioRealm extends AuthorizingRealm {
     private UserMapper userMapper;
 
 
-    public ResultModel login(String code, String password) throws Exception {
+    public String login(String code, String password) throws Exception {
         logger.warn("username====================>" + code);
         logger.warn("password====================>" + password);
 
         Subject subject = SecurityUtils.getSubject();
         if (!subject.isAuthenticated()) {
-            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(code, password);
+            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken("A10002", "123456");
             usernamePasswordToken.setRememberMe(true);
             try {
                 subject.login(usernamePasswordToken);
@@ -49,9 +49,10 @@ public class ShrioRealm extends AuthorizingRealm {
         Token token = new Token();
         token.setUserId((Long) session.getAttribute("id"));
         session.stop();
-        return ResultModel.getSuccessResultModel((Object) JWTUtil.sign(token));
-    }
+       /* return ResultModel.getSuccessResultModel((Object) JWTUtil.sign(token));*/
+        return "redirect:/list.jsp";
 
+    }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
