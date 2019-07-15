@@ -35,7 +35,6 @@ public class RoleController {
         return roleService.getRoleInfo(getRoleInfoVo);
     }
 
-
     @ApiOperation(value = "添加角色", notes = "sbd")
     @RequestMapping(value = "addRole", method = RequestMethod.POST)
     public ResultModel addRole(@RequestBody @Valid AddRoleVo addRoleVo) throws Exception {
