@@ -2,7 +2,6 @@ package com.forum.pojo.roleControllerVo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 
@@ -19,14 +18,13 @@ public class EditRoleVo {
     /**
      * 姓名
      */
-    @NotEmpty
-    @ApiModelProperty(value = "姓名",required = true)
+    @ApiModelProperty(value = "姓名")
     private String name;
 
     /**
      * 描述
      */
-    @ApiModelProperty(value = "描述",required = true)
+    @ApiModelProperty(value = "描述")
     private String description;
 
 }

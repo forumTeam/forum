@@ -19,6 +19,7 @@ public class AddRoleVo {
     /**
      * 描述
      */
+    @NotEmpty
     @ApiModelProperty(value = "描述",required = true)
     private String description;
 
