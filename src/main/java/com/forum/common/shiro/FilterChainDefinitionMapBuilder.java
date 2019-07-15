@@ -12,9 +12,8 @@ public class FilterChainDefinitionMapBuilder {
         map.put("/user/getRoles","anon");
         map.put("/user/counts", "anon");
         map.put("/user/logout", "logout");
-        map.put("/login.jsp", "authc");
-        map.put("/list.jsp", "authc");
-        map.put("/**", "authc");
+        map.put("/login.jsp", "anon");
+      //  map.put("/**", "authc");
         return map;
     }
 

@@ -24,8 +24,8 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 
 @Api(tags = "用户")
-@Controller
-@RequestMapping("user")
+@RestController
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -38,16 +38,12 @@ public class UserController {
     private TeskExchangeUtil teskExchangeUtil;
 
 
-   /* @ApiOperation(value = "登陆", notes = "靳旺")
-    @RequestMapping(value = "login", method = RequestMethod.GET)
+    @ApiOperation(value = "登陆", notes = "靳旺")
+    @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResultModel login(@RequestBody @Valid LoginVo loginVo) throws Exception {
         return shrioRealm.login(loginVo.getAccount(), loginVo.getPassword());
-    }*/
-   @ApiOperation(value = "登陆", notes = "靳旺")
-   @RequestMapping(value = "login", method = RequestMethod.GET)
-   public String login() throws Exception {
-       return shrioRealm.login("A10002", "123456");
-   }
+    }
+
 
     @ApiOperation(value = "注册", notes = "靳旺")
     @RequestMapping(value = "register", method = RequestMethod.POST)

@@ -30,7 +30,7 @@ public class ShrioRealm extends AuthorizingRealm {
     private UserMapper userMapper;
 
 
-    public String login(String code, String password) throws Exception {
+    public ResultModel login(String code, String password) throws Exception {
         logger.warn("username====================>" + code);
         logger.warn("password====================>" + password);
 
@@ -49,9 +49,8 @@ public class ShrioRealm extends AuthorizingRealm {
         Token token = new Token();
         token.setUserId((Long) session.getAttribute("id"));
         session.stop();
-       /* return ResultModel.getSuccessResultModel((Object) JWTUtil.sign(token));*/
-        return "redirect:/list.jsp";
-
+        logger.warn(String.valueOf((Object) JWTUtil.sign(token)));
+        return ResultModel.getSuccessResultModel((Object) JWTUtil.sign(token));
     }
 
     @Override
