@@ -27,7 +27,7 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <bean class="com.forum.common.filter.CorsInterceptor"></bean>
+            <bean class="com.forum.common.filter.CorsInterceptor"/>
         </mvc:interceptor>
 
         <mvc:interceptor>
@@ -36,7 +36,8 @@
             <mvc:exclude-mapping path="/user/login"/>
             <mvc:exclude-mapping path="/user/register"/>
             <mvc:exclude-mapping path="/user/counts"/>
-            <bean class="com.forum.common.filter.TokenInterceptor"></bean>
+            <mvc:exclude-mapping path="/list.jsp"/>
+            <bean class="com.forum.common.filter.TokenInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

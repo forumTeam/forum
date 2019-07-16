@@ -12,23 +12,17 @@ import com.forum.repository.domain.User;
 import com.forum.service.userService.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 @Api(tags = "用户")
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -39,8 +33,6 @@ public class UserController {
 
     @Autowired
     private TeskExchangeUtil teskExchangeUtil;
-
-    Logger logger = LoggerFactory.getLogger(UserController.class);
 
 
     @ApiOperation(value = "登陆", notes = "靳旺")
@@ -93,14 +85,11 @@ public class UserController {
         return ResultModel.getSuccessResultModel();
     }
 
-    @ApiOperation(value = "获取用帖子与动态数", notes = "靳旺")
+    @ApiOperation(value = "获取权限", notes = "靳旺")
     @RequestMapping(value = "getRoles", method = RequestMethod.POST)
     public ResultModel getRoles() throws Exception {
-        ArrayList arrayList = new ArrayList();
-        arrayList.add("admin");
-        arrayList.add("user");
-        arrayList.add("anon");
-        return ResultModel.getSuccessResultModel(arrayList);
+        return userService.getRoles();
+
     }
 
 }

@@ -7,9 +7,13 @@ import com.forum.pojo.dto.CountDto;
 import com.forum.pojo.vo.userControllerVo.LoginVo;
 import com.forum.pojo.vo.userControllerVo.RegisterVo;
 import com.forum.repository.domain.Dynamic;
+import com.forum.repository.domain.Role;
 import com.forum.repository.domain.User;
+import com.forum.repository.domain.UserRole;
 import com.forum.repository.mapper.DynamicMapper;
+import com.forum.repository.mapper.RoleMapper;
 import com.forum.repository.mapper.UserMapper;
+import com.forum.repository.mapper.UserRoleMapper;
 import com.forum.repository.mapper.ext.DynamicMapperExt;
 import com.forum.repository.mapper.ext.PostsMapperExt;
 import com.forum.service.userService.UserService;
@@ -22,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,20 +43,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PostsMapperExt postsMapperExt;
 
-    @Override
-    @Transactional
-    public ResultModel login(LoginVo loginVo) throws Exception {
-        User user = new User();
-        user.setAccount(loginVo.getAccount());
-        user.setIsDel(false);
-        PageList<User> users = userMapper.selectObjectListByWhere(user, ofPageBounds());
-        if (CollectionUtil.isEmpty(users)) throw new Exception("账户不存在");
-        if (!EncryptUtil.md5(loginVo.getPassword(), users.get(0).getSalt()).equals(users.get(0).getPassword()))
-            throw new Exception("密码错误");
-        Token token = new Token();
-        token.setUserId(users.get(0).getPkUserId());
-        return responseSuccess((Object) JWTUtil.sign(token));
-    }
+    @Autowired
+    private UserRoleMapper userRoleMapper;
+
+    @Autowired
+    private RoleMapper roleMapper;
+
 
     @Override
     @Transactional
@@ -62,7 +59,7 @@ public class UserServiceImpl implements UserService {
         if (userMapper.selectCountByWhere(user) != 0) throw new Exception("账号已被注册，请换账号");
         user.setName(registerVo.getName());
         user.setSalt(new SecureRandomNumberGenerator().nextBytes().toHex());
-        user.setPassword(new Md5Hash(registerVo.getPassword(),  user.getSalt(), 3).toString());
+        user.setPassword(new Md5Hash(registerVo.getPassword(), user.getSalt(), 3).toString());
         user.setNickName(registerVo.getNickName());
         user.setSex(registerVo.getSex());
         user.setQq(registerVo.getQq());
@@ -118,5 +115,20 @@ public class UserServiceImpl implements UserService {
         map.put("post", countPost);
 
         return responseSuccess(map);
+    }
+
+    @Override
+    public ResultModel getRoles() {
+        UserRole userRole = new UserRole();
+        userRole.setFkUserId(TokenUtil.getUserId());
+        userRole.setIsDel(false);
+        PageList<UserRole> userRoles = userRoleMapper.selectObjectListByWhere(userRole, ofPageBounds());
+
+        List<String> roles = new ArrayList<>();
+        for (UserRole item : userRoles) {
+            Role role = roleMapper.selectByPrimaryKey(item.getFkRoleId());
+            if (!ObjectUtil.isNull(role)) roles.add(role.getName());
+        }
+        return responseSuccess(roles);
     }
 }
