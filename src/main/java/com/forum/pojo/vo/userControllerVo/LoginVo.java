@@ -12,7 +12,7 @@ public class LoginVo {
     /**
      * 用户名
      */
-    @NotEmpty
+    @NotEmpty(message = "用户名不能为空！")
     @ApiModelProperty(value = "用户名")
     public String account;
 
