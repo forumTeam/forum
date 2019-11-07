@@ -89,7 +89,12 @@ public class UserController {
     @RequestMapping(value = "getRoles", method = RequestMethod.POST)
     public ResultModel getRoles() throws Exception {
         return userService.getRoles();
+    }
 
+    @ApiOperation(value = "测试", notes = "靳旺")
+    @RequestMapping(value = "getMessage", method = RequestMethod.GET)
+    public String getMessage(){
+     return "我是第一个tomcat";
     }
 
 }

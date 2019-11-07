@@ -1,27 +1,21 @@
 package com.forum.service.userService.impl;
 
 import com.forum.common.model.ResultModel;
-import com.forum.common.model.Token;
 import com.forum.common.utils.*;
 import com.forum.pojo.dto.CountDto;
-import com.forum.pojo.vo.userControllerVo.LoginVo;
 import com.forum.pojo.vo.userControllerVo.RegisterVo;
-import com.forum.repository.domain.Dynamic;
 import com.forum.repository.domain.Role;
 import com.forum.repository.domain.User;
-import com.forum.repository.domain.UserRole;
-import com.forum.repository.mapper.DynamicMapper;
+import com.forum.repository.domain.UserRoleRelevance;
 import com.forum.repository.mapper.RoleMapper;
 import com.forum.repository.mapper.UserMapper;
-import com.forum.repository.mapper.UserRoleMapper;
+import com.forum.repository.mapper.UserRoleRelevanceMapper;
 import com.forum.repository.mapper.ext.DynamicMapperExt;
 import com.forum.repository.mapper.ext.PostsMapperExt;
 import com.forum.service.userService.UserService;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Md5Hash;
-import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +38,7 @@ public class UserServiceImpl implements UserService {
     private PostsMapperExt postsMapperExt;
 
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private UserRoleRelevanceMapper userRoleRelevanceMapper;
 
     @Autowired
     private RoleMapper roleMapper;
@@ -119,13 +113,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResultModel getRoles() {
-        UserRole userRole = new UserRole();
+        UserRoleRelevance userRole = new UserRoleRelevance();
         userRole.setFkUserId(TokenUtil.getUserId());
         userRole.setIsDel(false);
-        PageList<UserRole> userRoles = userRoleMapper.selectObjectListByWhere(userRole, ofPageBounds());
+        PageList<UserRoleRelevance> userRoles = userRoleRelevanceMapper.selectObjectListByWhere(userRole, ofPageBounds());
 
         List<String> roles = new ArrayList<>();
-        for (UserRole item : userRoles) {
+        for (UserRoleRelevance item : userRoles) {
             Role role = roleMapper.selectByPrimaryKey(item.getFkRoleId());
             if (!ObjectUtil.isNull(role)) roles.add(role.getName());
         }

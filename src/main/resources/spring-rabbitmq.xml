@@ -5,11 +5,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-
+<!--
     <description>rabbitmq 连接服务配置</description>
 
 
-    <!--  创建连接工厂  -->
+    &lt;!&ndash;  创建连接工厂  &ndash;&gt;
     <rabbit:connection-factory id="connectionFactory"
                                username="${mq.username}"
                                password="${mq.password}"
@@ -20,7 +20,7 @@ http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springfr
     <rabbit:admin id="rabbitAdmin" connection-factory="connectionFactory"/>
 
 
-    <!--  定义模板  -->
+    &lt;!&ndash;  定义模板  &ndash;&gt;
     <rabbit:template id="rabbitTemplate"
                      connection-factory="connectionFactory"
                      exchange="directExchange"
@@ -28,25 +28,25 @@ http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springfr
                      confirm-callback="confirmCallBack"
                      mandatory="true"/>
 
-    <!--  定义交换机  -->
+    &lt;!&ndash;  定义交换机  &ndash;&gt;
     <rabbit:direct-exchange name="directExchange" auto-declare="true">
         <rabbit:bindings>
             <rabbit:binding queue="testRabbitMessage" key="testRabbitMessage"/>
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
-    <!--  定义队列  -->
+    &lt;!&ndash;  定义队列  &ndash;&gt;
     <rabbit:queue name="testRabbitMessage" auto-declare="true" durable="true"/>
 
 
-    <!-- 定义消费者 -->
+    &lt;!&ndash; 定义消费者 &ndash;&gt;
     <bean id="RestRabbitMessage" class="com.forum.common.listener.rabbitmq.RestRabbitMessage"/>
 
 
-    <!-- 定义监听 -->
+    &lt;!&ndash; 定义监听 &ndash;&gt;
     <rabbit:listener-container connection-factory="connectionFactory" acknowledge="manual">
         <rabbit:listener ref="RestRabbitMessage" queues="testRabbitMessage"/>
-    </rabbit:listener-container>
+    </rabbit:listener-container>-->
 
 
 </beans>

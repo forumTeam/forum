@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.forum.repository.mapper.UserRoleMapper" >
-  <resultMap id="BaseResultMap" type="com.forum.repository.domain.UserRole" >
-    <id column="pk_user_id" property="pkUserId" jdbcType="BIGINT" />
+<mapper namespace="com.forum.repository.mapper.UserRoleRelevanceMapper" >
+  <resultMap id="BaseResultMap" type="com.forum.repository.domain.UserRoleRelevance" >
+    <id column="pk_user_role_relevance_id" property="pkUserRoleRelevanceId" jdbcType="BIGINT" />
     <result column="fk_user_id" property="fkUserId" jdbcType="BIGINT" />
     <result column="fk_role_id" property="fkRoleId" jdbcType="BIGINT" />
     <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
@@ -39,22 +39,22 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    pk_user_id, fk_user_id, fk_role_id, CREATED_TIME, UPDATED_TIME, is_del
+    pk_user_role_relevance_id, fk_user_id, fk_role_id, CREATED_TIME, UPDATED_TIME, is_del
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from user_role
-    where pk_user_id = #{pkUserId,jdbcType=BIGINT}
+    from user_role_relevance
+    where pk_user_role_relevance_id = #{pkUserRoleRelevanceId,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from user_role
-    where pk_user_id = #{pkUserId,jdbcType=BIGINT}
+    delete from user_role_relevance
+    where pk_user_role_relevance_id = #{pkUserRoleRelevanceId,jdbcType=BIGINT}
   </delete>
-  <select id="selectObjectListByWhere" resultMap="BaseResultMap" parameterType="com.forum.repository.domain.UserRole" >
+  <select id="selectObjectListByWhere" resultMap="BaseResultMap" parameterType="com.forum.repository.domain.UserRoleRelevance" >
     select 
     <include refid="Base_Column_List" />
-    from user_role
+    from user_role_relevance
     <where >
       <if test="fkUserId != null" >
         and fk_user_id = #{fkUserId,jdbcType=BIGINT}
@@ -76,7 +76,7 @@
   <select id="selectByBillId" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
-    from user_role
+    from user_role_relevance
     <where >
       <if test="selective != null" >
         <if test="selective.fkUserId != null" >
@@ -96,14 +96,14 @@
         </if>
       </if>
       <if test="ids != null" >
-        and pk_user_id in (<foreach collection="ids" separator="," item="item"> #{item} </foreach>)
+        and pk_user_role_relevance_id in (<foreach collection="ids" separator="," item="item"> #{item} </foreach>)
       </if>
     </where>
   </select>
-  <select id="selectCountByWhere" resultType="java.lang.Integer" parameterType="com.forum.repository.domain.UserRole" >
+  <select id="selectCountByWhere" resultType="java.lang.Integer" parameterType="com.forum.repository.domain.UserRoleRelevance" >
     select 
      count(1) 
-    from user_role
+    from user_role_relevance
     <where >
       <if test="fkUserId != null" >
         and fk_user_id = #{fkUserId,jdbcType=BIGINT}
@@ -122,29 +122,29 @@
       </if>
     </where>
   </select>
-  <insert id="insert" parameterType="com.forum.repository.domain.UserRole" useGeneratedKeys="true" keyProperty="pkUserId" >
-    insert into user_role (pk_user_id, fk_user_id, fk_role_id, 
+  <insert id="insert" parameterType="com.forum.repository.domain.UserRoleRelevance" useGeneratedKeys="true" keyProperty="pkUserRoleRelevanceId" >
+    insert into user_role_relevance (pk_user_role_relevance_id, fk_user_id, fk_role_id, 
       CREATED_TIME, UPDATED_TIME, is_del
       )
-    values (#{pkUserId,jdbcType=BIGINT}, #{fkUserId,jdbcType=BIGINT}, #{fkRoleId,jdbcType=BIGINT}, 
+    values (#{pkUserRoleRelevanceId,jdbcType=BIGINT}, #{fkUserId,jdbcType=BIGINT}, #{fkRoleId,jdbcType=BIGINT}, 
       #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP}, #{isDel,jdbcType=BIT}
       )
   </insert>
   <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" >
-    insert into user_role (pk_user_id, 
+    insert into user_role_relevance (pk_user_role_relevance_id, 
       fk_user_id, fk_role_id, CREATED_TIME, 
       UPDATED_TIME, is_del)
     values 
- <foreach collection="records" separator="," item="item">  (#{item.pkUserId,jdbcType=BIGINT}, 
+ <foreach collection="records" separator="," item="item">  (#{item.pkUserRoleRelevanceId,jdbcType=BIGINT}, 
       #{item.fkUserId,jdbcType=BIGINT}, #{item.fkRoleId,jdbcType=BIGINT}, #{item.createdTime,jdbcType=TIMESTAMP}, 
       #{item.updatedTime,jdbcType=TIMESTAMP}, #{item.isDel,jdbcType=BIT})  
  </foreach>
   </insert>
-  <insert id="insertSelective" parameterType="com.forum.repository.domain.UserRole" useGeneratedKeys="true" keyProperty="pkUserId" >
-    insert into user_role
+  <insert id="insertSelective" parameterType="com.forum.repository.domain.UserRoleRelevance" useGeneratedKeys="true" keyProperty="pkUserRoleRelevanceId" >
+    insert into user_role_relevance
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="pkUserId != null" >
-        pk_user_id,
+      <if test="pkUserRoleRelevanceId != null" >
+        pk_user_role_relevance_id,
       </if>
       <if test="fkUserId != null" >
         fk_user_id,
@@ -163,8 +163,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="pkUserId != null" >
-        #{pkUserId,jdbcType=BIGINT},
+      <if test="pkUserRoleRelevanceId != null" >
+        #{pkUserRoleRelevanceId,jdbcType=BIGINT},
       </if>
       <if test="fkUserId != null" >
         #{fkUserId,jdbcType=BIGINT},
@@ -183,8 +183,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.forum.repository.domain.UserRole" >
-    update user_role
+  <update id="updateByPrimaryKeySelective" parameterType="com.forum.repository.domain.UserRoleRelevance" >
+    update user_role_relevance
     <set >
       <if test="fkUserId != null" >
         fk_user_id = #{fkUserId,jdbcType=BIGINT},
@@ -202,15 +202,15 @@
         is_del = #{isDel,jdbcType=BIT},
       </if>
     </set>
-    where pk_user_id = #{pkUserId,jdbcType=BIGINT}
+    where pk_user_role_relevance_id = #{pkUserRoleRelevanceId,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.forum.repository.domain.UserRole" >
-    update user_role
+  <update id="updateByPrimaryKey" parameterType="com.forum.repository.domain.UserRoleRelevance" >
+    update user_role_relevance
     set fk_user_id = #{fkUserId,jdbcType=BIGINT},
       fk_role_id = #{fkRoleId,jdbcType=BIGINT},
       CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
       UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
       is_del = #{isDel,jdbcType=BIT}
-    where pk_user_id = #{pkUserId,jdbcType=BIGINT}
+    where pk_user_role_relevance_id = #{pkUserRoleRelevanceId,jdbcType=BIGINT}
   </update>
 </mapper>

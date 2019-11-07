@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 @Service
 public class TeskExchangeUtil extends BaseExchangeUtil {
 
-    @Resource(name = "rabbitTemplate")
+   // @Resource(name = "rabbitTemplate")
     private RabbitTemplate rabbitTemplate;
 
 
